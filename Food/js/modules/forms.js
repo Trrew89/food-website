@@ -1,7 +1,8 @@
 import {closeModal, openModal} from './modal';
+import {postData} from '../services/services';
 
-function forms(modalTimerId) {
-    const forms = document.querySelectorAll('form');
+function forms(formSelector, modalTimerId) {
+    const forms = document.querySelectorAll(formSelector);
     const message = {
         loading: 'img/form/spinner.svg',
         succes: 'Everything is OK',
@@ -11,16 +12,7 @@ function forms(modalTimerId) {
         bindpostData(item);
     });
 
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data
-        });
-        return await res.json();
-    };
+
 
     function bindpostData(form){
         form.addEventListener('submit', (e)=>{
@@ -29,8 +21,8 @@ function forms(modalTimerId) {
             const statusMessage = document.createElement('img');
             statusMessage.src = message.loading;
             statusMessage.style.cssText=`
-            display: block;
-            margin: 0 auto;
+                display: block;
+                margin: 0 auto;
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
@@ -38,9 +30,9 @@ function forms(modalTimerId) {
            
            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            postData('http://localhost:3000/requests', json)
-            .then(data => {
+            postData('http://localhost:3000/requests', json).then(data => {
                 console.log(data);
+                console.log ('asd');
                 showThanksModal(message.succes);
                 
                 statusMessage.remove();
